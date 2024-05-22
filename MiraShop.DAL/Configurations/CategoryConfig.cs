@@ -9,6 +9,8 @@ namespace MiraShop.DAL.Configurations
         public void Configure(EntityTypeBuilder<Category> builder)
         {
             builder.Property(b => b.Name).HasMaxLength(60);
+            
+            builder.HasIndex(u => u.Name).IsUnique();
         }
     }
 }

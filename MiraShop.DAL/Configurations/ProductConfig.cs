@@ -14,6 +14,10 @@ namespace MiraShop.DAL.Configurations
                 .WithMany(y => y.Products)
                 .HasForeignKey(x => x.CategoryId);
 
+			builder.HasOne<Genre>(x => x.Genre)
+                .WithMany(y => y.Products)
+                .HasForeignKey(x => x.GenreId);
+
             builder.HasIndex(u => u.Name).IsUnique();
         }
     }

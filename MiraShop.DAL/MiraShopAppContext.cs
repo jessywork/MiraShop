@@ -14,6 +14,7 @@ namespace MiraShop.DAL
         public DbSet<CartProduct> CartProducts { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<FavList> FavLists { get; set; }
+        public DbSet<FavListProduct> FavListProducts { get; set; }
         public DbSet<Genre> Genres { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderProduct> OrderProducts { get; set; }

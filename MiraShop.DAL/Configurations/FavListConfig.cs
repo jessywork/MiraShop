@@ -8,7 +8,9 @@ namespace MiraShop.DAL.Configurations
     {
         public void Configure(EntityTypeBuilder<FavList> builder)
         {
-            builder.Property(b => b.Name).HasMaxLength(60);
+            builder.HasOne<User>(x => x.User)
+                .WithOne(y => y.Cart)
+                .HasForeignKey(x => x.UserId);
         }
     }
 }
