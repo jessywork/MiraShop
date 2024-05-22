@@ -8,5 +8,6 @@ namespace MiraShop.DAL.Models
         public Category? Category { get; set; }
         public ICollection<OrderProduct>? OrderProducts { get; set; }
         public ICollection<CartProduct>? CartProducts { get; set; }
+        public ICollection<FavList>? FavListProducts { get; set; }
     }
 }
