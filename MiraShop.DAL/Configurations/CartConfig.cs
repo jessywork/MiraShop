@@ -6,11 +6,11 @@ namespace MiraShop.DAL.Configurations
 {
     public class CartConfig : IEntityTypeConfiguration<Cart>
     {
-        public void Configure(EntityTypeBuilder<Product> builder)
+        public void Configure(EntityTypeBuilder<Cart> builder)
         {
             builder.HasOne<User>(x => x.User)
                 .WithOne(y => y.Cart)
-                .HasForeignKey(x => x.UserId);
+                .HasForeignKey<Cart>(x => x.UserId);
         }
     }
 }

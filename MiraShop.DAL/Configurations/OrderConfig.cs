@@ -8,9 +8,9 @@ namespace MiraShop.DAL.Configurations
     {
         public void Configure(EntityTypeBuilder<Order> builder)
         {
-			builder.HasOne<User>(x => x.User)
+            builder.HasOne<User>(x => x.User)
                 .WithMany(y => y.Orders)
-                .HasForeignKey(x => x.OrderId);
+                .HasForeignKey(x => x.UserId);
         }
     }
 }
