@@ -9,89 +9,75 @@ namespace MiraShop.BLL.Implementations
 {
     public class CartService : EntitiesService<Cart, BaseSearchModel<Cart>>, ICartService
     {
-        // private readonly IRepository<UserHouse> _userHouseRepository;
+        protected override string entityName { get; set; } = GenericConsts.Entities.Cart;
 
-        // public HouseService(IRepository<House> houseRepository, IRepository<UserHouse> userHouseRepository) : base(houseRepository)
-        // {
-        //     _userHouseRepository = userHouseRepository;
-        // }
+        private readonly IRepository<CartProduct> _cartProductRepository;
 
-        // public async Task DeleteUsersFromHouse(Guid houseId, HashSet<Guid> usersId, bool forceDeleteHouse, CancellationTokenSource? token = null)
-        // {
-        //     if (!forceDeleteHouse)
-        //     {
-        //         var houseUsers = await GetUsersFromHouse(houseId);
-                
-        //         if(usersId.Count >= houseUsers.Count && usersId.SetEquals(houseUsers.Select(x => x.Id)))
-        //         {
-        //             throw new CustomException(GenericConsts.Exceptions.DeleteAllUsersFromHouse);
-        //         }
-        //     }
+        public CartService(IRepository<Cart> cartRepository, IRepository<CartProduct> cartProductRepository) : base(cartRepository)
+        {
+            _cartProductRepository = cartProductRepository;
+        }
 
-        //     await _userHouseRepository.DeleteMultipleLeafType(x => x.HouseId == houseId && usersId.Contains(x.UserId), token);
+        /// <summary>
+        /// Get all the products added to the cart with quantities.
+        /// </summary>
+        /// <param name="id">Cart Id</param>
+        public async Task<Dictionary<Product, int>> GetProductsFromFavList(Guid cartId)
+        {
+            var products = await _cartProductRepository.GetWhere<Product>(productList =>
+                productList.CartId == cartId, productList => productList.Product!);
 
-        //     if (forceDeleteHouse)
-        //     {
-        //         try
-        //         {
-        //             var houseUsers = await GetUsersFromHouse(houseId);
-        //         }
-        //         catch(NotFoundException)
-        //         {
-        //             await DeleteById(houseId, token);
-        //         }
-        //     }
-        // }
+            if (products == null || products.Count == 0)
+            {
+                throw new NotFoundException(GenericConsts.Exceptions.NoProductsFoundInCart);
+            }
 
-        // public async Task<List<User>> GetUsersFromHouse(Guid houseId)
-        // {
-        //     var users = await _userHouseRepository.GetWhere<User>(userHouse => userHouse.HouseId == houseId, userHouse => userHouse.User!);
+            var productQuantities = new Dictionary<Product, int>();
 
-        //     if (users == null || users.Count == 0)
-        //     {
-        //         throw new NotFoundException(GenericConsts.Exceptions.NoUsersFoundInHouse);
-        //     }
+            foreach (var product in products)
+            {
+                if (productQuantities.ContainsKey(product))
+                {
+                    productQuantities[product]++;
+                }
+                else
+                {
+                    productQuantities.Add(product, 1);
+                }
+            }
 
-        //     return users;
-        // }
+            return productQuantities;
+        }
 
+        /// <summary>
+        /// Update the quantity of the products in the cart.
+        /// Update the quantity of the products that already exist in the cart.
+        /// Insert the products that don't exist in the cart.
+        /// </summary>
+        /// <param name="id">Cart Id</param>
+        /// <param name="cartProducts">Products to insert or update in the cart</param>
+        public async Task AddProductsToCart(Guid id, Dictionary<Guid, CartProduct> cartProducts, CancellationTokenSource? token = null)
+        {
+            var productsToUpdate = await _cartProductRepository.GetWhere(
+                x => x.CartId == id && cartProducts.Keys.Contains(x.ProductId));
 
-        // /// <summary>
-        // /// If the user doesn't have any house yet, when you add a new one, it will automatically become the default house for that user
-        // /// </summary>
-        // public async Task InsertUserToHouse(Guid houseId, Guid userId, CancellationTokenSource? token = null)
-        // {
-        //     try
-        //     {
-        //         var newUserHouse = new UserHouse
-        //         {
-        //             UserId = userId,
-        //             HouseId = houseId
-        //         };
+            foreach (var entity in productsToUpdate)
+            {
+                entity.Quantity += cartProducts[entity.ProductId].Quantity;
 
-        //         if (!await _userHouseRepository.AnyWhere(x => x.UserId == userId))
-        //         {
-        //             newUserHouse.DefaultHouse = true;
-        //         }
+                await _cartProductRepository.Update(entity, false, token);
+            }
 
-        //         await _userHouseRepository.Insert(newUserHouse, token);
-        //     }
-        //     catch (Microsoft.EntityFrameworkCore.DbUpdateException ex)
-        //     {
-        //         throw new SQLException(ex, GenericConsts.Exceptions.InsertDuplicateUserInHouse);
-        //     }
-        // }
+            if (productsToUpdate.ToList().Count < cartProducts.Count)
+            {
+                var productsToInsert = cartProducts
+                    .Where(pair => !productsToUpdate.Any(entity => entity.ProductId == pair.Key))
+                    .Select(pair => pair.Value);
 
-        // public async Task InsertWithUser(House house, Guid userId, CancellationTokenSource? token = null)
-        // {
-        //     if(await _userHouseRepository.AnyWhere(x => x.UserId == userId && x.House != null && x.House.Name == house.Name))
-        //     {
-        //         throw new SQLException(SQLException.SQLExceptionType.DuplicateEntity, GenericConsts.Exceptions.DuplicateHouseName);
-        //     }
+                await _cartProductRepository.InsertMultiple(productsToInsert, false, token);
+            }
 
-        //     await Insert(house, token);
-
-        //     await InsertUserToHouse(house.Id, userId, token);
-        // }
+            await _cartProductRepository.SaveChangesAsync(token);
+        }
     }
 }

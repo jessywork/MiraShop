@@ -1,4 +1,11 @@
-﻿namespace MiraShop.BLL.Implementations
+﻿using MiraShop.BLL.Data.Consts.ENConsts;
+using MiraShop.BLL.Interfaces;
+using MiraShop.DAL.Exceptions;
+using MiraShop.DAL.Filters;
+using MiraShop.DAL.Models;
+using MiraShop.DAL.Repositories.Interfaces;
+
+namespace MiraShop.BLL.Implementations
 {
     public class EntitiesService<T, TFilter> : IEntitiesService<T, TFilter> where T : BaseEntity where TFilter : BaseSearchModel<T>
     {

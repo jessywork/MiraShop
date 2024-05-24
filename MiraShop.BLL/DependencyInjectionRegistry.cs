@@ -1,20 +1,21 @@
-﻿using GrocifyApp.BLL.Implementations;
-using GrocifyApp.BLL.Interfaces;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
+using MiraShop.BLL.Implementations;
+using MiraShop.BLL.Interfaces;
 
-namespace GrocifyApp.BLL
+namespace MiraShop.BLL
 {
     public static class DependencyInjectionRegistry
     {
         public static void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped(typeof(IEntitiesService<,>), typeof(EntitiesService<,>));
-            services.AddScoped(typeof(IEntitiesServiceWithHouse<,>), typeof(EntitiesServiceWithHouse<,>));
             services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IHouseService, HouseService>();
-            services.AddScoped<IShoppingListService, ShoppingListService>();
-            services.AddScoped<IInventoryService, InventoryService>();
-            services.AddScoped<IMealService, MealService>();
+            services.AddScoped<ICartService, CartService>();
+            services.AddScoped<IGenreService, GenreService>();
+            services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<IFavListService, FavListService>();
+            services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IProductService, ProductService>();
         }
     }
 }

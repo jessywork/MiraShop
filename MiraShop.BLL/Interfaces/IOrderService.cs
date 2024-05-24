@@ -5,7 +5,6 @@ namespace MiraShop.BLL.Interfaces
 {
     public interface IOrderService : IEntitiesService<Order, BaseSearchModel<Order>>
     {
-        // Task<User?> GetUserByEmail(string Email);
-        // Task<Guid> GetUserDefaultHouseId(Guid userId);
+        Task<Dictionary<Product, int>> GetProductsFromOrder(Guid orderId);
     }
 }

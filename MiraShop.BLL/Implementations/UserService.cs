@@ -1,23 +1,20 @@
-﻿using GrocifyApp.BLL.Data.Consts.ENConsts;
-using GrocifyApp.BLL.Interfaces;
-using GrocifyApp.DAL.Exceptions;
-using GrocifyApp.DAL.Filters;
-using GrocifyApp.DAL.Models;
-using GrocifyApp.DAL.Repositories.Interfaces;
+﻿using MiraShop.BLL.Interfaces;
+using MiraShop.DAL.Exceptions;
+using MiraShop.DAL.Filters;
+using MiraShop.DAL.Models;
+using MiraShop.DAL.Repositories.Interfaces;
 
-namespace GrocifyApp.BLL.Implementations
+namespace MiraShop.BLL.Implementations
 {
     public class UserService : EntitiesService<User, BaseSearchModel<User>>, IUserService
     {
-        private readonly IRepository<UserHouse> _userHouseRepository;
-        private readonly IHouseService _houseService;
+        private readonly ICartService _cartService;
+        private readonly IFavListService _favListService;
 
-        public UserService(IRepository<User> repository, IRepository<UserHouse> userHouseRepository,
-            IHouseService houseService) : base(repository)
+        public UserService(IRepository<User> repository, ICartService cartService, IFavListService favListService) : base(repository)
         {
-            _userHouseRepository = userHouseRepository;
-
-            _houseService = houseService;
+            _cartService = cartService;
+            _favListService = favListService;
         }
 
         protected override async Task<bool> Validate(User user)
@@ -30,32 +27,26 @@ namespace GrocifyApp.BLL.Implementations
             return true;
         }
 
-        protected override async Task FinishInsert(User entity)
+        protected override async Task FinishInsert(User user)
         {
-            House house = new House()
+            Cart cart = new Cart()
             {
-                Name = "My House"
+                UserId = user.Id
             };
 
-            await _houseService.InsertWithUser(house, entity.Id);
+            FavList favList = new FavList()
+            {
+                UserId = user.Id
+            };
+
+            await _cartService.Insert(cart);
+
+            await _favListService.Insert(favList);
         }
 
         public async Task<User?> GetUserByEmail(string email)
         {
             return await repository.GetSingleWhere(b => b.Email == email);
-        }
-
-        public async Task<Guid> GetUserDefaultHouseId(Guid userId)
-        {
-            Guid? userHouseId = await _userHouseRepository.GetSingleWhere
-                (userHouse => userHouse.UserId == userId && userHouse.DefaultHouse == true, userHouse => userHouse.HouseId);
-
-            if (userHouseId == null)
-            {
-                throw new NotFoundException(GenericConsts.Exceptions.NoHouseFoundForUser);
-            }
-
-            return userHouseId.Value;
         }
     }
 }
