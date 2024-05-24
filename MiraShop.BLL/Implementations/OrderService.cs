@@ -19,7 +19,7 @@ namespace MiraShop.BLL.Implementations
         }
 
         /// <summary>
-        /// Get all the products added to the cart with quantities.
+        /// Get all the products in the orde with quantities.
         /// </summary>
         /// <param name="id">Order Id</param>
         public async Task<Dictionary<Product, int>> GetProductsFromOrder(Guid orderId)
