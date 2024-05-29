@@ -1,10 +1,18 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiraShop.APP", "MiraShop.APP\MiraShop.APP.csproj", "{D8C5F144-7AD1-480A-8A21-B7436CED1985}"
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34902.65
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MiraShop.APP", "MiraShop.APP\MiraShop.APP.csproj", "{D8C5F144-7AD1-480A-8A21-B7436CED1985}"
+	ProjectSection(ProjectDependencies) = postProject
+		{AE8E1656-D509-4522-89C1-E3C9A5316516} = {AE8E1656-D509-4522-89C1-E3C9A5316516}
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiraShop.BLL", "MiraShop.BLL\MiraShop.BLL.csproj", "{AE8E1656-D509-4522-89C1-E3C9A5316516}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MiraShop.BLL", "MiraShop.BLL\MiraShop.BLL.csproj", "{AE8E1656-D509-4522-89C1-E3C9A5316516}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiraShop.DAL", "MiraShop.DAL\MiraShop.DAL.csproj", "{83B70B8F-0992-40D3-8858-330F2D1F57D7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MiraShop.DAL", "MiraShop.DAL\MiraShop.DAL.csproj", "{83B70B8F-0992-40D3-8858-330F2D1F57D7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorApp1", "BlazorApp1\BlazorApp1.csproj", "{DD986739-00E8-4945-9EE0-F26B2588BD11}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,5 +32,15 @@ Global
 		{83B70B8F-0992-40D3-8858-330F2D1F57D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{83B70B8F-0992-40D3-8858-330F2D1F57D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{83B70B8F-0992-40D3-8858-330F2D1F57D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD986739-00E8-4945-9EE0-F26B2588BD11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD986739-00E8-4945-9EE0-F26B2588BD11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD986739-00E8-4945-9EE0-F26B2588BD11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD986739-00E8-4945-9EE0-F26B2588BD11}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BCB85562-833E-470E-BB50-F5C30AF834C1}
 	EndGlobalSection
 EndGlobal
